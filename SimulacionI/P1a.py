@@ -11,13 +11,14 @@ import matplotlib.pyplot as plt
 import random as rn
 
 fmax = 0.86
-x = range(13)
+grid = np.zeros(13)
 m1 = fmax/8
 m2 = -fmax/4
 
 pdf = np.zeros(13)
 
 for i in range(13):
+    grid[i] = 0.5 + i
     if i <= 8:
         pdf[i] = m1*i
     else:
@@ -25,5 +26,5 @@ for i in range(13):
         
     
 
-plt.plot(x, pdf)
+plt.plot(grid, pdf)
 plt.show()
