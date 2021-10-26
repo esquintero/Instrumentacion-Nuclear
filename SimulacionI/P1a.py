@@ -10,7 +10,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import random as rn
 
-fmax = 0.86
+fmax = 1/6
 grid = np.zeros(13)
 m1 = fmax/8
 m2 = -fmax/4
