@@ -35,14 +35,22 @@ for j in range(11):
     F[j + 1] = F[j] + pdf[j + 1]        
        
 
-
+plt.figure(figsize=(6.0,6.0))
 ax=plt.gca()
 plt.plot(grid, pdf, 'bo')
+plt.title("Probabilidad de que llueva en Bogotá")
+plt.xlabel("Tiempo t(hora)")
+plt.ylabel("Probabilidad de lluvia P(t)")
 plt.grid(True)
 
-plt.figure()
+#Grafica de Funcion acumulada
+plt.figure(figsize=(5.0,4.8))
 plt.plot(grid, F, ds='steps-mid',c='r')
+plt.title("Funcion acumulativa ")
+plt.xlabel("Tiempo t (hora)")
+plt.ylabel("F(t)")
 ax=plt.gca()
+
 ax.set_xticks(range(0,12))
 plt.grid(True)
 
