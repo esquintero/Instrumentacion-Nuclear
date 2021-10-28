@@ -32,7 +32,7 @@ for i in range(12):
 # Acumulativa
 
 for j in range(11): 
-    F[j + 1] = F[j] + pdf[j + 1]        
+    F[j + 1] = F[j] + pdf[j+ 1]        
        
     
 
@@ -41,9 +41,9 @@ for j in range(11):
 N = 30
 #histograma=np.arange(6,18,1)
 
-#rn.seed(12345)
+rn.seed(12345)
 def simulacion(N):#,histograma):
-    histograma=np.arange(6,18,1)
+    histograma=np.zeros(12)
     for i in range(N):
         r = rn.random()
         for j in range(len(histograma)):
@@ -51,8 +51,23 @@ def simulacion(N):#,histograma):
                 bingo = j
                 break
         histograma[bingo]+=1
+    return histograma,N
+  
+  
+def divide(histograma,N):
+    for i in range (len(histograma)):
+        histograma[i]=histograma[i]/N
     return histograma
-    
+
+a=simulacion(30)
+b=simulacion(365)
+c=simulacion(1000)
+d=simulacion(np.power(10,6)) 
+
+
+ 
+
+#print(grid,pdf,F) 
     
 
 #print(histograma)
@@ -78,7 +93,7 @@ plt.grid(True)
 
 #Grafica de Probabilidad = 30
 plt.figure(figsize=(5.0,4.8))
-plt.plot(grid, simulacion(30), ds='steps-mid',c='r')
+plt.plot(grid, a[0], ds='steps-mid',c='r')
 plt.title("Frecuencia de lluvia en 30 días")
 plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
@@ -90,7 +105,7 @@ plt.grid(True)
 
 #Grafica de Probabilidad = 365
 plt.figure(figsize=(5.0,4.8))
-plt.plot(grid, simulacion(365), ds='steps-mid',c='r')
+plt.plot(grid, b[0], ds='steps-mid',c='r')
 plt.title("Frecuencia de lluvia en 365 días")
 plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
@@ -102,7 +117,7 @@ plt.grid(True)
 
 #Grafica de Probabilidad = 1000
 plt.figure(figsize=(5.0,4.8))
-plt.plot(grid, simulacion(1000), ds='steps-mid',c='r')
+plt.plot(grid, c[0], ds='steps-mid',c='r')
 plt.title("Frecuencia de lluvia en 1000 días")
 plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
@@ -111,16 +126,64 @@ ax=plt.gca()
 ax.set_xticks(range(0,12))
 plt.grid(True)
 
-
 #Grafica de Probabilidad = 10^6
 plt.figure(figsize=(5.0,4.8))
-plt.plot(grid, simulacion(np.power(10,6)), ds='steps-mid',c='r')
+plt.plot(np.arange(6,18,1.), d[0], ds='steps-mid',c='r')
 plt.title("Frecuencia de lluvia en 10^6 días")
 plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
 ax=plt.gca()
 
-ax.set_xticks(range(0,12))
+ax.set_xticks(range(5,19))
+plt.grid(True)
+
+#Grafica Ajustada N30
+plt.figure(figsize=(5.0,4.8))
+plt.plot(grid,divide(*a), ds='steps-mid',c='r')
+plt.plot(grid,pdf,ls='-')
+plt.title("Comparacion densidad de probabilidad y frecuencia N=30")
+plt.xlabel("Tiempo t (hora)")
+plt.ylabel("Frecuencia")
+ax=plt.gca()
+
+#ax.set_xticks(range(5,19))
+plt.grid(True)
+
+#Grafica Ajustada Nb
+plt.figure(figsize=(5.0,4.8))
+plt.plot(grid,divide(*b), ds='steps-mid',c='r')
+plt.plot(grid,pdf,ls='-')
+plt.title("Comparacion densidad de probabilidad y frecuencia N=365")
+plt.xlabel("Tiempo t (hora)")
+plt.ylabel("Frecuencia")
+ax=plt.gca()
+
+#ax.set_xticks(range(5,19))
+plt.grid(True)
+
+
+#Grafica Ajustada Nc
+plt.figure(figsize=(5.0,4.8))
+plt.plot(grid,divide(*c), ds='steps-mid',c='r')
+plt.plot(grid,pdf,ls='-')
+plt.title("Comparacion densidad de probabilidad y frecuencia N=1000")
+plt.xlabel("Tiempo t (hora)")
+plt.ylabel("Frecuencia")
+ax=plt.gca()
+
+#ax.set_xticks(range(5,19))
+plt.grid(True)
+
+
+#Grafica Ajustada N10^6
+plt.figure(figsize=(5.0,4.8))
+plt.plot(grid,divide(*d), ds='steps-mid',c='r')
+plt.plot(grid,pdf,ls='-')
+plt.title("Comparacion densidad de probabilidad y frecuencia N=10^6")
+plt.xlabel("Tiempo t (hora)")
+plt.ylabel("Frecuencia")
+ax=plt.gca()
+
+#ax.set_xticks(range(5,19))
 plt.grid(True)
 plt.show()
-
