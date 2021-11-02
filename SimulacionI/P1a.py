@@ -36,10 +36,10 @@ for j in range(11):
        
     
 
-#simulación
+# Simulación
 # Número de historias = número de días
 N = 30
-#histograma=np.arange(6,18,1)
+
 
 rn.seed(12345)
 def simulacion(N):#,histograma):
@@ -66,12 +66,11 @@ d=simulacion(np.power(10,6))
 
 
  
-
+grid=np.arange(6.5,18.5,1.)
 #print(grid,pdf,F) 
     
 
 #print(histograma)
-
 plt.figure(figsize=(6.0,6.0))
 ax=plt.gca()
 plt.plot(grid, pdf, 'bo')
@@ -88,7 +87,7 @@ plt.xlabel("Tiempo t (hora)")
 plt.ylabel("F(t)")
 ax=plt.gca()
 
-ax.set_xticks(range(0,12))
+#ax.set_xticks(range(0,12))
 plt.grid(True)
 
 #Grafica de Probabilidad = 30
@@ -99,7 +98,7 @@ plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
 ax=plt.gca()
 
-ax.set_xticks(range(0,12))
+#ax.set_xticks(range(0,12))
 plt.grid(True)
 
 
@@ -111,7 +110,7 @@ plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
 ax=plt.gca()
 
-ax.set_xticks(range(0,12))
+#ax.set_xticks(range(0,12))
 plt.grid(True)
 
 
@@ -123,7 +122,7 @@ plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
 ax=plt.gca()
 
-ax.set_xticks(range(0,12))
+#ax.set_xticks(range(0,12))
 plt.grid(True)
 
 #Grafica de Probabilidad = 10^6
@@ -134,7 +133,7 @@ plt.xlabel("Tiempo t (hora)")
 plt.ylabel("Frecuencia")
 ax=plt.gca()
 
-ax.set_xticks(range(5,19))
+#ax.set_xticks(range(5,19))
 plt.grid(True)
 
 #Grafica Ajustada N30
