@@ -4,7 +4,7 @@ Created on Mon Oct 25 16:19:40 2021
 
 @author: Esteban
 """
-
+#un comentario de prue
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
