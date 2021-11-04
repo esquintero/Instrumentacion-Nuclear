@@ -34,7 +34,7 @@ mu=valmedio(x)
 sigma=desv(x)
 print(mu,sigma)
 """
-def contador(x,delta):
+def contadorPrueba(x,delta):
     
     rango=np.arange(np.min(x),np.max(x),delta)
     histograma=np.zeros(len(rango))
@@ -43,7 +43,7 @@ def contador(x,delta):
     return histograma, rango
 """           
          
-def contador2(x,delta):
+def contador(x,delta):
     
     rango=np.arange(np.min(x),np.max(x),delta)
     histograma=np.zeros(len(rango))
@@ -58,6 +58,33 @@ def contador2(x,delta):
         histograma[j]=sumar
     return rango, histograma
 
-x1,y1=contador2(x,2.5)
-#print()
-plt.plot(x1,y1,ds='steps-mid')
+x1,y1=contador(x,2.5)
+x2,y2=contador(x,10)
+
+plt.figure()
+plt.plot(x1,y1,ds='steps')
+plt.title("Frecuencia cada 2.5 mV")
+plt.ylabel("Frecuencia")
+plt.xlabel("Voltaje (mV)")
+
+
+plt.figure()
+plt.plot(x2,y2,ds='steps')
+plt.title("Frecuencia cada 10 mV")
+plt.ylabel("Frecuencia")
+plt.xlabel("Voltaje (mV)")
+
+
+
+
+"""
+ax,fig=plt.subplots(2,1)
+
+fig[0].plot(x1,y1,ds='steps')
+fig[1].plot(x2,y2,ds='steps')
+ax[1].yticks(range(0,50))
+fig[1].title("Datos cada 10 mV")
+"""
+
+
+
