@@ -33,36 +33,31 @@ def desv(x):
 mu=valmedio(x)
 sigma=desv(x)
 print(mu,sigma)
-
-
-
-
+"""
 def contador(x,delta):
     
     rango=np.arange(np.min(x),np.max(x),delta)
     histograma=np.zeros(len(rango))
     x=np.sort(x)
-    for j in range(len(histograma)):
-            for i in range(len(x)):
-                if x[i]>=rango[j-1] and x[i]<rango[j]:
-                    bingo=j
-                    break
-            histograma[bingo]+=1
+    histograma,rango=plt.hist(x,rango)
+    return histograma, rango
+"""           
+         
+def contador2(x,delta):
+    
+    rango=np.arange(np.min(x),np.max(x),delta)
+    histograma=np.zeros(len(rango))
+    x=np.sort(x)
+    
+    for j in range (len(histograma)):
+        sumar=0
+        for i in range(len(x)):
+            
+            if x[i]>=rango[j-1] and x[i]<rango[j]:
+                sumar+=1
+        histograma[j]=sumar
     return rango, histograma
 
-x1,y=contador(x,2.5)
-print()
-plt.plot(x1,y)
-
-"""
-def contador2(x):#,histograma):
-    histograma=np.zeros(12)
-    for i in range(x):
-        r = rn.random()
-        for j in range(len(histograma)):
-            if r >= F[j-1] and r < F[j]:
-                bingo = j
-                break
-        histograma[bingo]+=1
-    return histograma,N
-"""
+x1,y1=contador2(x,2.5)
+#print()
+plt.plot(x1,y1,ds='steps-mid')
