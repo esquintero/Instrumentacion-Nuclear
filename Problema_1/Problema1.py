@@ -30,6 +30,7 @@ def desv(x):
     sigma=np.sqrt(suma/200.)
     return sigma    
 
+#Ejecutamos las funciones y asignar valor mu y sigma
 mu=valmedio(x)
 sigma=desv(x)
 print(mu,sigma)
@@ -42,7 +43,7 @@ def contadorPrueba(x,delta):
     histograma,rango=plt.hist(x,rango)
     return histograma, rango
 """           
-         
+#Función para agrupar datos en rangos para hacer el histograma         
 def contador(x,delta):
     
     rango=np.arange(np.min(x),np.max(x),delta)
@@ -60,7 +61,7 @@ def contador(x,delta):
 
 x1,y1=contador(x,2.5)
 x2,y2=contador(x,10)
-
+"""
 plt.figure()
 plt.plot(x1,y1,ds='steps')
 plt.title("Frecuencia cada 2.5 mV")
@@ -73,8 +74,31 @@ plt.plot(x2,y2,ds='steps')
 plt.title("Frecuencia cada 10 mV")
 plt.ylabel("Frecuencia")
 plt.xlabel("Voltaje (mV)")
+"""
 
+# Definicoin de funcion para valor medio de los histogramas
+def valmedio2(x):
+    suma=0
+    for i in range(len(x)):
+        suma+=((x[i-1]+x[i])/2)*x[i]
+        
+    mu=suma/np.sum(x)
+    return mu
+mu2=valmedio2(x1)
+mu3=valmedio2(x2)
 
+#Función para hacer la varianza de los histogramas
+def varianza(x,mu):
+    suma=0
+    for i in range(len(x)):
+        suma+=np.power((((x[i-1]+x[i])/2)-mu),2)*x[i]
+        
+    sigmaq=suma/np.sum(x)
+    return sigmaq
+var2=varianza(x1,mu2)
+var3=varianza(x2,mu3)
+
+print(mu2,mu3)  
 
 
 """
