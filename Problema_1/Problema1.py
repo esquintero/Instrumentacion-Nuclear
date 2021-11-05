@@ -99,7 +99,7 @@ def desv2(x,mu):
 sigma2=desv2(x1,mu2)
 sigma3=desv2(x2,mu3)
 
-print("Valores medios",m1,mu2,mu3,"/n Desviaciones", sigma1,sigma2,sigma3) 
+print("Valores medios",mu1,mu2,mu3,"/n Desviaciones", sigma1,sigma2,sigma3) 
 
 
 """
