@@ -87,18 +87,19 @@ def valmedio2(x):
 mu2=valmedio2(x1)
 mu3=valmedio2(x2)
 
-#Función para hacer la varianza de los histogramas
-def varianza(x,mu):
+#Función para hacer la varianza y así determinar la desviación de los histogramas
+def desv2(x,mu):
     suma=0
     for i in range(len(x)):
         suma+=np.power((((x[i-1]+x[i])/2)-mu),2)*x[i]
         
     sigmaq=suma/np.sum(x)
+    sigmaq=np.sqrt(sigmaq)
     return sigmaq
-var2=varianza(x1,mu2)
-var3=varianza(x2,mu3)
+sigma2=desv2(x1,mu2)
+sigma3=desv2(x2,mu3)
 
-print(mu2,mu3)  
+  
 
 
 """
