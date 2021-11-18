@@ -2,7 +2,7 @@
 """
 Created on Mon Oct 25 16:19:40 2021
 
-@author: Esteban
+@author: Esteban - Andresda- Andres
 """
 #un comentario de prue
 import numpy as np
@@ -56,6 +56,7 @@ def simulacion(N):#,histograma):
   
 def divide(histograma,N):
     for i in range (len(histograma)):
+        #histograma[i]=(histograma[i]-np.std(histograma))/np.mean(histograma)
         histograma[i]=histograma[i]/N
     return histograma
 
@@ -73,7 +74,7 @@ grid=np.arange(6.5,18.5,1.)
 #print(histograma)
 plt.figure(figsize=(6.0,6.0))
 ax=plt.gca()
-plt.plot(grid, pdf, 'bo')
+plt.plot(grid, pdf,'o')
 plt.title("Probabilidad de que llueva en Bogotá")
 plt.xlabel("Tiempo t(hora)")
 plt.ylabel("Probabilidad de lluvia P(t)")
