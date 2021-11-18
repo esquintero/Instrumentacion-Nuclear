@@ -61,20 +61,20 @@ def contador(x,delta):
 
 x1,y1=contador(x,2.5)
 x2,y2=contador(x,10)
-"""
+
 plt.figure()
 plt.plot(x1,y1,ds='steps')
-plt.title("Frecuencia cada 2.5 mV")
+plt.title("Histograma con barras de 2.5 mV")
 plt.ylabel("Frecuencia")
 plt.xlabel("Voltaje (mV)")
 
 
 plt.figure()
 plt.plot(x2,y2,ds='steps')
-plt.title("Frecuencia cada 10 mV")
+plt.title("Histograma con barras de 10 mV")
 plt.ylabel("Frecuencia")
 plt.xlabel("Voltaje (mV)")
-"""
+
 
 # Definicoin de funcion para valor medio de los histogramas
 def valmedio2(x):
@@ -99,7 +99,7 @@ def desv2(x,mu):
 sigma2=desv2(x1,mu2)
 sigma3=desv2(x2,mu3)
 
-print("Valores medios",m1,mu2,mu3,"/n Desviaciones", sigma1,sigma2,sigma3) 
+print("Valores medios",mu1,mu2,mu3,"/n Desviaciones", sigma1,sigma2,sigma3) 
 
 
 """
@@ -109,7 +109,7 @@ fig[0].plot(x1,y1,ds='steps')
 fig[1].plot(x2,y2,ds='steps')
 ax[1].yticks(range(0,50))
 fig[1].title("Datos cada 10 mV")
-"""
 
+"""
 
 
