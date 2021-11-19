@@ -34,20 +34,32 @@ def f(x,m,b):
     return f
 popt,popc=sp.curve_fit(f,x,d,p0=[m,b])
 
+#Incertidumbre usando el valor medio
+def errorconmu(d,mu):
+    y_error=np.zeros(len(d))
+    for i in range(len(d)):
+        y_error[i]=d[i]-mu
+    return y_error
+    
+yerror2=errorconmu(d, mu)
+print(yerror2)
 #Incertidumbre de el valor medio
 
 def incertmedia(yerror):
     mu_error=0
     for i in range(len(yerror)):
-        mu_error+=yerror[i]**2
+        mu_error+=(yerror[i]/10)**2
     mu_error=np.sqrt(mu_error)
     return mu_error
 
+
 mu_error=incertmedia(yerror)
 print(round(mu_error,2))
+
+
 #plt.plot(x,d,"o")
 plt.errorbar(x,d,yerror,marker='s',ls="",label="Medición")
 #plt.plot(x,f(x,*popt))
-plt.hlines(mu,xmin=0,xmax=10,color='k',label="Valor medio")
+plt.hlines([mu,mu+mu_error,mu-mu_error],xmin=0,xmax=10,color='k',label="Valor medio")
 plt.legend(loc=2)
 plt.xticks(x)
