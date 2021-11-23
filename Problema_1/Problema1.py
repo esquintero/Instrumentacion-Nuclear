@@ -33,7 +33,7 @@ def desv(x):
 #Ejecutamos las funciones y asignar valor mu y sigma
 mu=valmedio(x)
 sigma=desv(x)
-print(mu,sigma)
+print("Valoe medio ", mu,"Desviacion es ", sigma)
 """
 def contadorPrueba(x,delta):
     

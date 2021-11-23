@@ -10,7 +10,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import random as rn
 import math as math
-import scipy as sp
+import scipy.optimize as sp
 
 x=[6,9,15]
 y=[3,9,11]
@@ -23,6 +23,9 @@ def f(x,m,b):
     f=m*x+b
     return f
 
-popt=sp.curve_fit(f,x,p0=[a0,a1])[0]
+popt=sp.curve_fit(f,x,y,p0=[a0,a1])[0]
 print(popt)
+sigmax=np.std(x)
+a=np.sqrt((3.75/6)**2+(1/9)**2)
 
+print(a)
