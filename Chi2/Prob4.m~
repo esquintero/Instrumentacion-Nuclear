@@ -1,0 +1,24 @@
+   %Este código realiza Gradient descent para aprende parámetros theta
+
+X = [6;9;15];
+y = [3;9;11];
+sigma = [1;2;3];
+
+plot(X, y, 'r-')
+ylabel('y')
+xlabel('x')
+hold on
+errorbar(y,sigma, 'bo')
+
+theta = zeros(2,1);
+iterations = 100;
+alpha = 0.01;
+
+theta = gradientDescent(X, y, theta, alpha, iterations, sigma);
+
+plot(X(:,2), theta'*X, 'k-')
+legend('Datos', 'Ajuste Lineal')
+hold off
+
+
+
