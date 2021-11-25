@@ -29,9 +29,10 @@ theta = theta - alpha*delta;
     % ============================================================
 
     % Save the cost J in every iteration    
-    %J_history(iter) = computeCost(X, y, theta);
+    J_history(iter) = computeCost(X, y, theta, sigma);
     
 
+    
 end
 
 end
