@@ -8,12 +8,12 @@ Created on Mon Nov 29 13:26:55 2021
 import numpy as np
 import matplotlib.pyplot as plt
 e=np.power(1.602,-19)
-#auz=79.
-auz=29.
-alfaz=2.#*e
-proton=1.#e
-#omega=197.
-omega=63.
+auz=79.
+#auz=29.
+alfaz=2.
+proton=1.
+omega=197.
+#omega=63.
 I=0.000790
 mec=0.511
 mn=939.
@@ -36,6 +36,8 @@ Ealfa=(1./ro)*E1*10
 
 E2=0.15*(auz/omega)*np.power((proton/beta),2)*(np.log((2*mec*np.power(beta*gamma,2)*Wmax)/np.power(I,2))-2*np.power(beta,2))
 Eproton=(1./ro)*E2*10
+
+fig=plt.figure(figsize=(6.0,6.0))
 plt.plot(E,Ealfa,label='Alfa')
 plt.plot(E,Eproton,label='Proton')
 plt.ylabel("dE/($ \\rho$dx)(MeV/($g/cm^2$))")
@@ -45,7 +47,7 @@ plt.title("Comparación de pérdida específica de la energía")
 plt.yscale('log')
 plt.xscale('log')
 plt.show()
-plt.savefig("energías")
+fig.savefig("energias")
 
 
 
