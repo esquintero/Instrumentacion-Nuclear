@@ -63,7 +63,7 @@ print(yerror2)
 def incertmedia(yerror):
     mu_error=0
     for i in range(len(yerror)):
-        mu_error+=np.power(yerror[i],2)/10.
+        mu_error+=np.power(yerror[i],2)/10
     print(mu_error)    
     mu_error=np.sqrt(mu_error)
     return mu_error
