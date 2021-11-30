@@ -2,18 +2,16 @@
 """
 Created on Mon Nov 29 13:26:55 2021
 
-@author: Andresda
+@author: Andresda & Esteban & LoyaL
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 e=np.power(1.602,-19)
 auz=79.
-#auz=29.
 alfaz=2.
 proton=1.
 omega=197.
-#omega=63.
 I=0.000790
 mec=0.511
 mn=939.
@@ -26,13 +24,13 @@ gamma=1./np.sqrt(1-np.power(beta,2))
 
 #Wmax=(2*mec*np.power(beta*gamma,2))/(1+2*(mec/malfa)*gamma+np.power(mec/mn,2))
 Wmax=2*mec*np.power(beta*gamma,2)
-#print(beta, gamma)
 
-#E1 es para 
+
+#E1 es para PARTÍCULAS ALFA 
 E1=0.15*(auz/omega)*np.power((alfaz/beta),2)*(np.log((2*mec*np.power(beta*gamma,2)*Wmax)/np.power(I,2))-2*np.power(beta,2))
 Ealfa=(1./ro)*E1*10
 
-#E2 para proton
+#E2 para PROTONES
 
 E2=0.15*(auz/omega)*np.power((proton/beta),2)*(np.log((2*mec*np.power(beta*gamma,2)*Wmax)/np.power(I,2))-2*np.power(beta,2))
 Eproton=(1./ro)*E2*10
