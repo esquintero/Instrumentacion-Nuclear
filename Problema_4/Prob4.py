@@ -13,19 +13,27 @@ import math as math
 import scipy.optimize as sp
 
 x=[6,9,15]
-y=[3,9,11]
-yerr=[1,2,3]
+y=[11,9,3]
+yerr=[3,2,1]
 
 a0=1
 a1=1
 
-def f(x,m,b):
+def fun(x,m,b):
     f=m*x+b
     return f
-
-popt=sp.curve_fit(f,x,y,p0=[a0,a1])[0]
+#curva=fun(x,-0.74,16.72)
+popt=sp.curve_fit(fun,x,y,p0=[a0,a1])[0]
 print(popt)
 sigmax=np.std(x)
 a=np.sqrt((3.75/6)**2+(1/9)**2)
+yee=np.zeros(len(x))
 
-print(a)
+for i in range(len(x)):
+    
+    yee[i]=fun(x[i],-0.904,16.714)
+    
+
+plt.errorbar(x,y,yerr,marker='s',ls="",label="Dato e incertidumbre")
+plt.plot(x,yee,label='Ajuste')
+plt.legend(loc=0)
