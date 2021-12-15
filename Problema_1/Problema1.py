@@ -33,7 +33,7 @@ def desv(x):
 #Ejecutamos las funciones y asignar valor mu y sigma
 mu=valmedio(x)
 sigma=desv(x)
-print(mu,sigma)
+print("Valoe medio ", mu,"Desviacion es ", sigma)
 """
 def contadorPrueba(x,delta):
     
@@ -67,16 +67,16 @@ plt.plot(x1,y1,ds='steps')
 plt.title("Histograma con barras de 2.5 mV")
 plt.ylabel("Frecuencia")
 plt.xlabel("Voltaje (mV)")
-
+plt.savefig("hist25mv")
 
 plt.figure()
 plt.plot(x2,y2,ds='steps')
 plt.title("Histograma con barras de 10 mV")
 plt.ylabel("Frecuencia")
 plt.xlabel("Voltaje (mV)")
+plt.savefig("hist10mv")
 
-
-# Definicoin de funcion para valor medio de los histogramas
+# Definicion de funcion para valor medio de los histogramas
 def valmedio2(x):
     suma=0
     for i in range(len(x)):
