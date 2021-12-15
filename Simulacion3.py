@@ -184,3 +184,42 @@ plt.legend(loc=0)
 plt.ylabel("Nucleos")
 plt.yscale('log')
 plt.show()
+
+
+f=lambda x : np.exp(-x*Gamma)*Gamma
+valor=integrate.quad(f,0,N0*tau)
+x=np.arange(0,len(A2)*dt,dt)
+y=np.zeros(len(x))
+def pdf(x,y):
+    for i in range(len(x)):
+        #y[i]=np.exp(-(x[i]+deltat)/2*gamma)*gamma
+        y[i]=(integrate.quad(lambda x: np.exp(-x*Gamma)*Gamma,x[i],x[i]+dt))[0]
+    #y=  np.exp(-x*gamma)*gamma
+    return y
+
+
+def simulacion(N,F):#,histograma):
+    histograma=np.zeros(len(F))
+    quedan=np.ones(len(F))*N
+    rn.seed(1)
+    for i in range(N):
+        r = rn.random()
+        for j in range(len(histograma)):
+            if r >= F[j-1] and r < F[j]:
+                bingo = j
+                break
+        histograma[bingo]+=1
+    quedan=quedan-np.cumsum(hid)
+    return histograma
+
+#Prueba exponencial
+y=pdf(x,y)
+F=np.cumsum(y)
+expo=simulacion(N0,F)
+y2=(N2*np.exp(-x*Gamma))*(np.max(A2)/N0)
+print(len(F),np.sum(expo))
+plt.plot(x,expo,ds='steps',label="Exponencial")
+plt.plot(x,A2,ds='steps',label="Poisson")
+plt.plot(x,y2,label="Ley de decaimiento")
+plt.legend(loc=0)
+plt.yscale('log')
