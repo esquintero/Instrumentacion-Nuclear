@@ -104,8 +104,11 @@ na221=["Pico 1 Na22",mu1,sigma1,2.35*sigma1,inten]
 
 
 
-popt, pcov = curve_fit(func, xi1, i1, p0=[M1,mu1,sigma1,a0,a1])
 
+popt, pcov = curve_fit(func, xi1, i1, p0=[M1,mu1,sigma1,a0,a1])
+#inten=quad(func,1130,1430,(popt[0],popt[1],popt[2],popt[3],popt[4]))[0]
+
+#na221=["Pico 1 Na22",popt[1],popt[2],2.35*popt[2],inten]
 print(popt)
 
 
@@ -485,6 +488,44 @@ nameimagen=nombre[0:]+"-Ajuste Gaussiano"+".png"
 
 fig.savefig(nameimagen)
 
-datos=[na221,na222,cs1371,cs1372,co601,co602]
-print(df(datos,columns=["Dato","$\mu$","$\sigma$","FWHM","Intensidad"]))
+
+#######################################################################
+########################  C A L I B R A C I O N #######################
+#######################################################################
+
+
+
+# Imprimimos la tabla con los datos a comparar
+
+datos=[na221,na222,cs1371,cs1372,co601,co602]   
+tabla=df(datos,columns=["Dato","$\mu$","$\sigma$","FWHM","Intensidad"])
+print(tabla)
+
+# Creamos el vector de valores medios sin el segundo pico de NA22
+vecmu=np.zeros(5)
+for i in range (5):
+    vecmu[i]=datos[i][1]
+vecmu[1]=datos[5][1]
+
+#Lo ordenamos de menor a mayor y traemos los datos suministrados por el profesor
+vecmu.sort() 
+vecteo=[32,661.66,1173.23,1274.54,1332.490]
+a0,a1=1.,1.
+#Función para el cambio a energía
+def recta(x,a0,a1):
+    return(a0+a1*x)
+
+popt,pcov=curve_fit(recta,vecmu,vecteo,p0=(a0,a1))
+a0,a1=popt[0],popt[1]
+print(a0,a1)
+
+plt.figure(figsize=(8.,8.))
+plt.plot(vecmu,vecteo,'o',label="Valores $\mu$")
+plt.plot(np.arange(0,3500), recta( np.arange(0,3500),a0,a1),label="E=168.23+0.39*Canal")
+#plt.plot(x,recta(a0,a1,x))
+plt.legend(loc = 2)
+plt.title("Gráfica Ajuste Energía vs Canal")
+plt.xlabel("Canal")
+plt.ylabel("Energía(keV)")
+fig.savefig("Grafica ajuste Energía vs Canal")
 
