@@ -76,13 +76,15 @@ def statsGauss_tabla(popt,pcov):
 
     print('   M(c/cnl)      mu(cnl)     sigma(cnl)   I(c) ')
     print('{0:4.2f}({1:2.2f}) &{2:4.1f}({3:2.1f}) &{4:3.1f}({5:2.1f}) &{6:5.0f}({7:3.0f})  \\\\'.format(M,stdv_M,mu,stdv_mu,s,stdv_s,I,stdv_I))
-
+    c=[round(mu,2),round(stdv_mu,2),round(s,2),round(stdv_s,2),round(I,2),round(stdv_I,2)]
+    return c 
 
 
 ######################################################################
 ######################################################################
 ######################################################################
 
+b0,b1=1.,10.
 
 y0= np.genfromtxt('./datos/NaI_Fondo_600s.dat',dtype=int,usecols=(1),skip_header=1)
 y1= np.genfromtxt('./datos/NaI_22Na_600s.dat',dtype=int,usecols=(1),skip_header=1)
@@ -124,9 +126,13 @@ plt.xlabel("Canal")
 plt.ylabel("Cuentas/Canal")
 plt.title("Espectros con detector NaI 3x3 sin Fondo")
 plt.show()
-fig2.savefig("espectrosinfondo")
+#fig2.savefig("espectrosinfondo")
+"""
 
 
+co57: 0-40 pic2 40-70
+"""
+"""
 #Cobalto 60
 plt.figure(figsize=(12,6))
 plt.plot(x0,y2,drawstyle='steps-mid',linewidth=2,label=r'$^{60}$Co')
@@ -134,7 +140,7 @@ plt.legend()
 plt.title("Espectro $^{60}$Co ")
 plt.show()
 
-"""
+
 #Sodio
 plt.figure(figsize=(12,6))
 plt.plot(x0,y1,drawstyle='steps-mid',linewidth=2,label=r'$^{22}$Na')
@@ -159,58 +165,6 @@ plt.legend()
 plt.title("Espectro $^{57}$Co")
 plt.show()
 """
-"""
-#Para cambiar en cada archivo, importa los datos
-nombre="./Na22"
-#Aqui añadimos la extension para importar y de una vez le doy el formato
-# para al final dejarlo con el jpg
-archivo=nombre+".dat" 
-nameimagen=nombre+".jpg"
-#Traer los datos al programa y hace arreglo f
-y= np.genfromtxt(archivo,dtype=int,usecols=(1))
- # Tomamos y=f por convención
-x=np.arange(len(y)) #Corresponde al numero de canales que hay en la medicion
-
-#y3=np.array(y)-np.array(y2)
-a0=100.
-a1=1.
-
-print(y)
-############################################################
-############################################################
-################## G R A F I C A    I N I C I A L ##########
-############################################################
-############################################################
-
-#Configuración de las grillas para graficar
-fig=plt.figure(figsize=(10,10))
-
-#ax = plt.subplots()
-# Grillas mayores intervalos 
-#ax.xaxis.set_major_locator(AutoLocator())
-#ax.yaxis.set_major_locator(AutoLocator())
-
-# Grillas menores para determinar intervalos
-#ax.xaxis.set_minor_locator(AutoMinorLocator())
-#ax.yaxis.set_minor_locator(AutoMinorLocator())
-#ax.grid(which='minor', color='#CCCCCC', linestyle=':')
-
-
-
-plt.plot(x,y)
-
-#plt.grid(True)
-plt.title("Gráfica espectro Na22",  loc='center', pad=None)
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-#plt.figure(0)
-
-#plt.xticks(np.arange(0,4000,100))
-nameimagen=nombre[0:]+".png"
-
-fig.savefig(nameimagen)
-plt.show()
-
 
 #########################################################################
 ######################## P I C O S  I N D I V I D U A L E S #############
@@ -218,302 +172,79 @@ plt.show()
 
 #Pico 1 Na22
 
-#Se define la funcion para el ajuste gaussiano
-def func(x,M,mu,sigma,a0,a1):
-    return (a1*(x-mu)+a0)+M*np.exp((-1/2)*((x-mu)/sigma)**2)
-
+#sodio22: pico 1 150-200, pico 2 380-430
 #Intervalo de FORMA MANUAL para cada PICO
-i1=y[1130:1430]
-xi1=x[1130:1430]
-
-#Ver ese pico
-fig=plt.figure()
-
-#fig, ax = plt.subplots()
-plt.plot(xi1,i1,label="Datos")
-
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
-
-
+i1=y1[160:200]
+xi1=x0[160:200]
 
 M1=np.max(i1)
-mu1=np.mean(xi1)
-sigma1=np.sqrt(mu1)
-centroide=xi1[0]+np.where(i1==M1)[0]
-#inten=quad(func,xi1[0],xi1[-1])
-inten=np.sum(i1)
-na221=["Pico 1 Na22",mu1,sigma1,2.35*sigma1,inten]
+
+mu=xi1[0]+np.where(i1==M1)[0]
+mu=float(mu)
+s1=np.sqrt(mu)
+
+popt, pcov = curve_fit(gaussBckgrnd,xi1,i1,p0=[mu,s1,M1,b0,b1])#sigma=np.sqrt(i1))
 
 ##################################################################
 ################## N O R M A L I Z A C I Ó N #####################
 ##################################################################
 
-
-
-
-popt, pcov = curve_fit(func, xi1, i1, p0=[M1,mu1,sigma1,a0,a1])
-#inten=quad(func,1130,1430,(popt[0],popt[1],popt[2],popt[3],popt[4]))[0]
-
-#na221=["Pico 1 Na22",popt[1],popt[2],2.35*popt[2],inten]
-print(popt)
-
-
-plt.plot(xi1, func(xi1, *popt),label="Ajuste")
-plt.title("Gráfica Ajuste Gaussiano pico #1 Na22",  loc='center', pad=None)
+mu,sigma1,M1,b0,b1 = popt
+y_fit = gaussBckgrnd(xi1,mu,sigma1,M1,b0,b1)
+r_fit = recta(xi1,b0,b1,mu)
+plt.figure(figsize=(cm2inch(45.0),cm2inch(25.0)))
+plt.plot(xi1,i1,drawstyle='steps-mid',linewidth=3,color=(0.7,0,0,0.9))
+plt.plot(xi1,y_fit,lw=3)
+plt.plot(xi1,r_fit)
 plt.xlabel("Canal")
-plt.ylabel("Cuentas")
+plt.ylabel("Cuentas/Canal")
 
-plt.vlines(centroide, 0, M1,color="g",label="Centroide")
-plt.legend(loc=0)
-
-nameimagen=nombre[0:]+"-Ajuste Gaussiano"+".png"
-
-fig.savefig(nameimagen)
-
-
-#Definición de los nuevos parametros para las nuevas graficas
-
+plt.fill_between(xi1,r_fit,y_fit,color=(0,0,0.7,0.2));
+na221=statsGauss_tabla(popt,pcov) # La salida produce resultados listos para incluir y editar en latex. Pero falta depurar la notación de las incertidumbres...
+na221.append(round(na221[4]*2.35,2))
+na221.insert(0,"Na22 Pico 1")
 #########################################################################
 ######################## P I C O S  I N D I V I D U A L E S #############
 #########################################################################
 
-#Pico 2 Sodio 22
+#Pico 2 Na22
 
-#Se define la funcion para el ajuste gaussiano
-def func(x,M,mu,sigma,a0,a1):
-    return (a1*(x-mu)+a0)+M*np.exp((-1/2)*((x-mu)/sigma)**2)
-
+#sodio22: pico 1 150-200, pico 2 380-430
 #Intervalo de FORMA MANUAL para cada PICO
-i1=y[2850:3400]
-xi1=x[2850:3400]
-
-#Ver ese pico
-fig=plt.figure()
-
-#fig, ax = plt.subplots()
-plt.plot(xi1,i1,label="Datos")
-
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
-
-
+i1=y1[380:455]
+xi1=x0[380:455]
 
 M1=np.max(i1)
-mu1=np.mean(xi1)
 
-sigma1=np.sqrt(mu1)
-centroide=xi1[0]+np.where(i1==M1)[0]
-#inten2=quad(func,xi1[0],xi1[-1])
-inten=np.sum(i1)
-na222=["Pico 2 Na22",mu1,sigma1,2.35*sigma1,inten]
-##################################################################
-################## N O R M A L I Z A C I Ó N #####################
-##################################################################
+mu=xi1[0]+np.where(i1==M1)[0]
+mu=float(mu)
+s1=np.sqrt(mu)
 
-
-popt, pcov = curve_fit(func, xi1, i1, p0=[M1,mu1,sigma1,a0,a1])
-
-#print(popt)
-
-
-plt.plot(xi1, func(xi1, *popt),label="Ajuste")
-plt.title("Gráfica Ajuste Gaussiano pico #2 Na22",  loc='center', pad=None)
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
-plt.vlines(centroide, 0, M1,color="g",label="Centroide")
-plt.legend(loc=0)
-
-nameimagen=nombre[0:]+"-Ajuste Gaussiano2"+".png"
-
-fig.savefig(nameimagen)
-
-
-
-#######################################################################
-#######################################################################
-#######################################################################
-"""
-
-
-"""
-
-#########################################################################
-######################## P I C O S  I N D I V I D U A L E S #############
-#########################################################################
-
-#Pico 1 Na22
-
-#Se define la funcion para el ajuste gaussiano
-def func(x,M,mu,sigma,a0,a1):
-    return (a1*(x-mu)+a0)+M*np.exp((-1/2)*((x-mu)/sigma)**2)
-
-#Intervalo de FORMA MANUAL para cada PICO
-i1=y[60:125]
-xi1=x[60:125]
-
-#Ver ese pico
-fig=plt.figure()
-
-#fig, ax = plt.subplots()
-plt.plot(xi1,i1,label="Datos")
-
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
-
-
-
-M1=np.max(i1)
-mu1=np.mean(xi1)
-sigma1=np.sqrt(mu1)
-centroide=xi1[0]+np.where(i1==M1)[0]
-#inten=quad(func,xi1[0],xi1[-1])
-inten=np.sum(i1)
-cs1371=["Pico 1 Cs137",mu1,sigma1,2.35*sigma1,inten]
+popt, pcov = curve_fit(gaussBckgrnd,xi1,i1,p0=[mu,s1,M1,b0,b1])#sigma=np.sqrt(i1))
 
 ##################################################################
 ################## N O R M A L I Z A C I Ó N #####################
 ##################################################################
 
-
-
-popt, pcov = curve_fit(func, xi1, i1, p0=[M1,mu1,sigma1,a0,a1])
-
-#print(popt)
-
-
-plt.plot(xi1, func(xi1, *popt),label="Ajuste")
-plt.title("Gráfica Ajuste Gaussiano pico #1 Cs137",  loc='center', pad=None)
+mu,sigma1,M1,b0,b1 = popt
+y_fit = gaussBckgrnd(xi1,mu,sigma1,M1,b0,b1)
+r_fit = recta(xi1,b0,b1,mu)
+plt.figure(figsize=(cm2inch(45.0),cm2inch(25.0)))
+plt.plot(xi1,i1,drawstyle='steps-mid',linewidth=3,color=(0.7,0,0,0.9))
+plt.plot(xi1,y_fit,lw=3)
+plt.plot(xi1,r_fit)
 plt.xlabel("Canal")
-plt.ylabel("Cuentas")
+plt.ylabel("Cuentas/Canal")
 
-plt.vlines(centroide, 0, M1,color="g",label="Centroide")
-plt.legend(loc=0)
+plt.fill_between(xi1,r_fit,y_fit,color=(0,0,0.7,0.2));
+na222=statsGauss_tabla(popt,pcov) # La salida produce resultados listos para incluir y editar en latex. Pero falta depurar la notación de las incertidumbres...
+na222.append(round(na222[4]*2.35,2))
+na222.insert(0,"Na22 Pico 2")
 
-nameimagen=nombre[0:]+"-Ajuste Gaussiano"+".png"
-
-fig.savefig(nameimagen)
-
-
-#Definición de los nuevos parametros para las nuevas graficas
-
-#########################################################################
-######################## P I C O S  I N D I V I D U A L E S #############
-#########################################################################
-
-#Pico 2 Cesio 137
-
-#Se define la funcion para el ajuste gaussiano
-def func(x,M,mu,sigma,a0,a1):
-    return (a1*(x-mu)+a0)+M*np.exp((-1/2)*((x-mu)/sigma)**2)
-
-#Intervalo de FORMA MANUAL para cada PICO
-i1=y[1400:1900]
-xi1=x[1400:1900]
-
-#Ver ese pico
-fig=plt.figure()
-
-#fig, ax = plt.subplots()
-plt.plot(xi1,i1,label="Datos")
-
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
-
-
-
-M1=np.max(i1)
-mu1=np.mean(xi1)
-
-sigma1=np.sqrt(mu1)
-centroide=xi1[0]+np.where(i1==M1)[0]
-#inten2=quad(func,xi1[0],xi1[-1])
-inten=np.sum(i1)
-cs1372=["Pico 2 Cs137",mu1,sigma1,2.35*sigma1,inten]
+#cobalto 60 :pico 1 350-400 , pico 2 400-460
 ##################################################################
-################## N O R M A L I Z A C I Ó N #####################
+################## C O 6 0                  ######################
 ##################################################################
-
-
-popt, pcov = curve_fit(func, xi1, i1, p0=[M1,mu1,sigma1,a0,a1])
-
-#print(popt)
-
-
-plt.plot(xi1, func(xi1, *popt),label="Ajuste")
-plt.title("Gráfica Ajuste Gaussiano pico #2 Cs137",  loc='center', pad=None)
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
-plt.vlines(centroide, 0, M1,color="g",label="Centroide")
-plt.legend(loc=0)
-
-nameimagen=nombre[0:]+"-Ajuste Gaussiano2"+".png"
-
-fig.savefig(nameimagen)
-
-
-
-datos=[na221,na222,cs1371,cs1372]
-#print(df(datos,columns=["Dato","\mu","\sigma","FWHM","Intensidad"]))
-#Definición de los nuevos parametros para las nuevas graficas
-
-
-
-#######################################################################
-#######################################################################
-#######################################################################
-
-
-
-#Para cambiar en cada archivo, importa los datos
-nombre="./Co60"
-#Aqui añadimos la extension para importar y de una vez le doy el formato
-# para al final dejarlo con el jpg
-archivo=nombre+".dat" 
-nameimagen=nombre+".jpg"
-#Traer los datos al programa y hace arreglo f
-y= np.genfromtxt(archivo,dtype=int,usecols=(1))
- # Tomamos y=f por convención
-x=np.arange(len(y)) #Corresponde al numero de canales que hay en la medicion
-
-#y3=np.array(y)-np.array(y2)
-a0=100.
-a1=1.
-
-print(y)
-"""
-"""
-############################################################
-############################################################
-################## G R A F I C A    I N I C I A L ##########
-############################################################
-############################################################
-
-
-
-fig=plt.figure(figsize=(10,10))
-
-
-
-plt.plot(x,y)
-
-#plt.grid(True)
-plt.title("Gráfica espectro Co60",  loc='center', pad=None)
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-#plt.figure(0)
-
-#plt.xticks(np.arange(0,4000,100))
-nameimagen=nombre[0:]+".png"
-
-fig.savefig(nameimagen)
-plt.show()
 
 
 #########################################################################
@@ -522,80 +253,150 @@ plt.show()
 
 #Pico 1 Co60
 
-#Se define la funcion para el ajuste gaussiano
-def func(x,M,mu,sigma,a0,a1):
-    return (a1*(x-mu)+a0)+M*np.exp((-1/2)*((x-mu)/sigma)**2)
-
-def func1(x,M1,mu1,M2,mu2,sigma1,sigma2):
-    return M1*np.exp((-1/2)*((x-mu1)/sigma1)**2)+M2*np.exp((-1/2)*((x-mu2)/sigma2)**2)
-
 #Intervalo de FORMA MANUAL para cada PICO
-i1=y[2500:3080]
-xi1=x[2500:3080]
-
-#Ver ese pico
-
-
-
-
-
-
+i1=y2[350:410]
+xi1=x0[350:410]
 
 M1=np.max(i1)
-mu1=np.mean(xi1)
-sigma1=np.sqrt(mu1)
-centroide1=xi1[0]+np.where(i1==M1)[0]
-#inten=quad(func,xi1[0],xi1[-1])
-inten=np.sum(i1)
-co601=["Pico 1 Co60",mu1,sigma1,2.35*sigma1,inten]
 
-i1=y[3080:3600]
-xi1=x[3080:3600]
+mu=xi1[0]+np.where(i1==M1)[0]
+mu=float(mu)
+s1=np.sqrt(mu)
 
-
-#Ver ese pico
-fig=plt.figure()
-
-#fig, ax = plt.subplots()
-
-
-
-M2=np.max(i1)
-mu2=np.mean(xi1)
-
-sigma2=np.sqrt(mu2)
-centroide2=xi1[0]+np.where(i1==M2)[0]
-#inten2=quad(func,xi1[0],xi1[-1])
-inten=np.sum(i1)
-co602=["Pico 2 Co60",mu2,sigma2,2.35*sigma2,inten]
-
-plt.plot(x[2500:3600],y[2500:3600],label="Datos")
-
-plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-
+popt, pcov = curve_fit(gaussBckgrnd,xi1,i1,p0=[mu,s1,M1,b0,b1])#sigma=np.sqrt(i1))
 
 ##################################################################
 ################## N O R M A L I Z A C I Ó N #####################
 ##################################################################
 
-
-
-popt, pcov = curve_fit(func1,x[2500:3600] , y[2500:3600], p0=[M1,mu1,M2,mu2,sigma1,sigma2])
-
-#print(popt)
-
-
-plt.plot(x[2500:3600], func1(x[2500:3600],*popt),label="Ajuste")
-plt.title("Gráfica Ajuste Gaussiano Co60",  loc='center', pad=None)
+mu,sigma1,M1,b0,b1 = popt
+y_fit = gaussBckgrnd(xi1,mu,sigma1,M1,b0,b1)
+r_fit = recta(xi1,b0,b1,mu)
+plt.figure(figsize=(cm2inch(45.0),cm2inch(25.0)))
+plt.plot(xi1,i1,drawstyle='steps-mid',linewidth=3,color=(0.7,0,0,0.9))
+plt.plot(xi1,y_fit,lw=3)
+plt.plot(xi1,r_fit)
 plt.xlabel("Canal")
-plt.ylabel("Cuentas")
-plt.vlines([centroide1,centroide2],[[ 0,0]], [M1,M2],color="g",label="Centroide")
-plt.legend(loc=0)
+plt.ylabel("Cuentas/Canal")
 
-nameimagen=nombre[0:]+"-Ajuste Gaussiano"+".png"
+plt.fill_between(xi1,r_fit,y_fit,color=(0,0,0.7,0.2));
+co601=statsGauss_tabla(popt,pcov) # La salida produce resultados listos para incluir y editar en latex. Pero falta depurar la notación de las incertidumbres...
+co601.append(round(co601[4]*2.35,2))
+co601.insert(0,"Co60 Pico 1")
+#########################################################################
+######################## P I C O S  I N D I V I D U A L E S #############
+#########################################################################
 
-fig.savefig(nameimagen)
+#Pico 2 Co60
+
+#Intervalo de FORMA MANUAL para cada PICO
+i1=y2[410:465]
+xi1=x0[410:465]
+
+M1=np.max(i1)
+
+mu=xi1[0]+np.where(i1==M1)[0]
+mu=float(mu)
+s1=np.sqrt(mu)
+
+popt, pcov = curve_fit(gaussBckgrnd,xi1,i1,p0=[mu,s1,M1,b0,b1])#sigma=np.sqrt(i1))
+
+##################################################################
+################## N O R M A L I Z A C I Ó N #####################
+##################################################################
+
+mu,sigma1,M1,b0,b1 = popt
+y_fit = gaussBckgrnd(xi1,mu,sigma1,M1,b0,b1)
+r_fit = recta(xi1,b0,b1,mu)
+plt.figure(figsize=(cm2inch(45.0),cm2inch(25.0)))
+plt.plot(xi1,i1,drawstyle='steps-mid',linewidth=3,color=(0.7,0,0,0.9))
+plt.plot(xi1,y_fit,lw=3)
+plt.plot(xi1,r_fit)
+plt.xlabel("Canal")
+plt.ylabel("Cuentas/Canal")
+
+plt.fill_between(xi1,r_fit,y_fit,color=(0,0,0.7,0.2));
+co602=statsGauss_tabla(popt,pcov) # La salida produce resultados listos para incluir y editar en latex. Pero falta depurar la notación de las incertidumbres...
+co602.append(round(co602[4]*2.35,2))
+co602.insert(0,"Co60 Pico 2")
+
+##################################################################
+################## C S 1 3 7                ######################
+##################################################################
+
+#cs137: pico 1 0-40 pico 2 200-220
+#########################################################################
+######################## P I C O S  I N D I V I D U A L E S #############
+#########################################################################
+
+#Pico 1 Cs137
+
+#Intervalo de FORMA MANUAL para cada PICO
+i1=y3[15:30]
+xi1=x0[15:30]
+
+M1=np.max(i1)
+
+mu=xi1[0]+np.where(i1==M1)[0]
+mu=float(mu)
+s1=np.sqrt(mu)
+
+popt, pcov = curve_fit(gaussBckgrnd,xi1,i1,p0=[mu,s1,M1,b0,b1])#sigma=np.sqrt(i1))
+
+##################################################################
+################## N O R M A L I Z A C I Ó N #####################
+##################################################################
+
+mu,sigma1,M1,b0,b1 = popt
+y_fit = gaussBckgrnd(xi1,mu,sigma1,M1,b0,b1)
+r_fit = recta(xi1,b0,b1,mu)
+plt.figure(figsize=(cm2inch(45.0),cm2inch(25.0)))
+plt.plot(xi1,i1,drawstyle='steps-mid',linewidth=3,color=(0.7,0,0,0.9))
+plt.plot(xi1,y_fit,lw=3)
+plt.plot(xi1,r_fit)
+plt.xlabel("Canal")
+plt.ylabel("Cuentas/Canal")
+
+plt.fill_between(xi1,r_fit,y_fit,color=(0,0,0.7,0.2));
+cs1371=statsGauss_tabla(popt,pcov) # La salida produce resultados listos para incluir y editar en latex. Pero falta depurar la notación de las incertidumbres...
+cs1371.append(round(cs1371[4]*2.35,2))
+cs1371.insert(0,"Cs137 Pico 1")
+#########################################################################
+######################## P I C O S  I N D I V I D U A L E S #############
+#########################################################################
+
+#Pico 2 Cs137
+
+#Intervalo de FORMA MANUAL para cada PICO
+i1=y3[200:255]
+xi1=x0[200:255]
+
+M1=np.max(i1)
+
+mu=xi1[0]+np.where(i1==M1)[0]
+mu=float(mu)
+s1=np.sqrt(mu)
+
+popt, pcov = curve_fit(gaussBckgrnd,xi1,i1,p0=[mu,s1,M1,b0,b1])#sigma=np.sqrt(i1))
+
+##################################################################
+################## N O R M A L I Z A C I Ó N #####################
+##################################################################
+
+mu,sigma1,M1,b0,b1 = popt
+y_fit = gaussBckgrnd(xi1,mu,sigma1,M1,b0,b1)
+r_fit = recta(xi1,b0,b1,mu)
+plt.figure(figsize=(cm2inch(45.0),cm2inch(25.0)))
+plt.plot(xi1,i1,drawstyle='steps-mid',linewidth=3,color=(0.7,0,0,0.9))
+plt.plot(xi1,y_fit,lw=3)
+plt.plot(xi1,r_fit)
+plt.xlabel("Canal")
+plt.ylabel("Cuentas/Canal")
+
+plt.fill_between(xi1,r_fit,y_fit,color=(0,0,0.7,0.2));
+cs1372=statsGauss_tabla(popt,pcov) # La salida produce resultados listos para incluir y editar en latex. Pero falta depurar la notación de las incertidumbres...
+cs1372.append(round(cs1372[4]*2.35,2))
+cs1372.insert(0,"Cs137 Pico 2")
 
 
 #######################################################################
@@ -607,9 +408,9 @@ fig.savefig(nameimagen)
 # Imprimimos la tabla con los datos a comparar
 
 datos=[na221,na222,cs1371,cs1372,co601,co602]   
-tabla=df(datos,columns=["Dato","$\mu$","$\sigma$","FWHM","Intensidad"])
+tabla=df(datos,columns=["Dato","$\mu$","(mu)","$\sigma$","(sigma)","Intensidad","(I)","FWHM"])
 print(tabla)
-
+"""
 # Creamos el vector de valores medios sin el segundo pico de NA22
 vecmu=np.zeros(6)
 for i in range (6):
